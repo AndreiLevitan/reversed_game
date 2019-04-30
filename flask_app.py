@@ -1,7 +1,6 @@
 from flask import Flask, request
 import logging
 import json
-from modules.translate import translate_en, translate_ru
 from modules.wordw import reverse_text, get_random_word
 
 app = Flask(__name__)
@@ -73,6 +72,13 @@ class DialogHandler:
                     self.response.set_suggest_next()
                     sessionStorage[user_id]['guess'] = True
                     return
+                elif self.request.text().lower() == 'стоп':
+                    sessionStorage[user_id]['game'] = False
+                    sessionStorage[user_id]['answer'] = None
+                    sessionStorage[user_id]['guess'] = False
+                    self.response.set_text('Конец игры!')
+                    self.response.set_suggest_start()
+                    return
                 else:
                     self.response.set_text('Не-а, попробуй ещё')
                     self.response.set_suggest_stop()
@@ -100,6 +106,7 @@ class DialogHandler:
 
     def get_word(self, user_id):
         word = get_random_word().lower()
+        logging.info('Word: %r', word)
         reversed_word = reverse_text(word)
         sessionStorage[user_id]['answer'] = word
         return reversed_word
