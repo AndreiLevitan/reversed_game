@@ -14,7 +14,7 @@ def translate_ru(text):
 
     response = requests.get(url, params)
     json = response.json()
-    return json['text']
+    return json['text'][0]
 
 
 def translate_en(text):
@@ -27,4 +27,4 @@ def translate_en(text):
 
     response = requests.get(url, params)
     json = response.json()
-    return json['text']
+    return json['text'][0]
